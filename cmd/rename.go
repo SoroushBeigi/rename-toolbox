@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var validTypes = []string{"prefix", "suffix", "format"}
+var validTypes = []string{"prefix", "suffix", "format", ""}
 
 // renameCmd represents the rename command
 var renameCmd = &cobra.Command{
@@ -52,7 +52,7 @@ func isValidType(renameType string) bool {
 
 func init() {
 	rootCmd.AddCommand(renameCmd)
-	renameCmd.Flags().StringP("type", "t", "prefix", "Type of renaming (prefix, suffix, format)")
+	renameCmd.Flags().StringP("type", "t", "", "Type of renaming (prefix, suffix, format)")
 
 }
 
@@ -83,7 +83,7 @@ func applyPattern(oldName string, value string, renameType string) string {
 	case "format":
 		return changeFormat(oldName, value)
 	}
-	return addPrefix(oldName, value)
+	return replaceName(oldName, value)
 }
 func addPrefix(oldName string, prefix string) string {
 	return prefix + oldName
@@ -98,4 +98,10 @@ func addSuffix(oldName string, suffix string) string {
 func changeFormat(oldName string, newFormat string) string {
 	fileName := strings.Split(oldName, ".")[0]
 	return fileName + "." + newFormat
+}
+
+func replaceName(oldName string, newName string) string {
+	splitStr := strings.Split(oldName, ".")
+	format := splitStr[1]
+	return newName + "." + format
 }
