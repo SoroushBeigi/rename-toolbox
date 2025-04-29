@@ -1,13 +1,15 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
 )
+
+var validTypes = []string{"prefix", "suffix", "format"}
 
 // renameCmd represents the rename command
 var renameCmd = &cobra.Command{
@@ -21,10 +23,31 @@ var renameCmd = &cobra.Command{
 		pattern := args[1]
 		renameType, err := cmd.Flags().GetString("type")
 		if err != nil {
-			fmt.Println("Please enter a type")
+			log.Println("Please enter a type")
+			return
 		}
-		renameFiles(dir, pattern, renameType)
+		isValid := isValidType(renameType)
+		if isValid {
+			renameFiles(dir, pattern, renameType)
+		}
+
 	},
+}
+
+func isValidType(renameType string) bool {
+	isValidType := false
+	for _, validType := range validTypes {
+		if renameType == validType {
+			isValidType = true
+			break
+		}
+	}
+
+	if !isValidType {
+		log.Printf("Error: Invalid type '%s'. Valid options are: prefix, suffix, format.\n", renameType)
+		return false
+	}
+	return true
 }
 
 func init() {
@@ -36,7 +59,7 @@ func init() {
 func renameFiles(dir, pattern, renameType string) {
 	files, err := os.ReadDir(dir)
 	if err != nil {
-		fmt.Println("Error reading directory:", err)
+		log.Printf("Error reading directory: %v", err)
 		return
 	}
 	for _, file := range files {
@@ -44,10 +67,10 @@ func renameFiles(dir, pattern, renameType string) {
 		newName := applyPattern(oldName, pattern, renameType)
 		err := os.Rename(filepath.Join(dir, oldName), filepath.Join(dir, newName))
 		if err != nil {
-			fmt.Printf("Failed to rename %s: %v\n", oldName, err)
+			log.Printf("Failed to rename %s: %v\n", oldName, err)
 			continue
 		}
-		fmt.Printf("Renamed: %s -> %s\n", oldName, newName)
+		log.Printf("Renamed: %s -> %s\n", oldName, newName)
 	}
 }
 
