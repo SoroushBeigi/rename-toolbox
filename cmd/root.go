@@ -22,8 +22,6 @@ func Execute() {
     }
 }
 
-func init() {
-    rootCmd.AddCommand(renameCmd)
-}
+func init() {}
 
 
