@@ -14,7 +14,7 @@ var numberCmd = &cobra.Command{
 	Use:   "number",
 	Short: "Labels all files in a directory with numbers",
 	Long: `Labels all files in a directory with numbers.
-	Example: a.txt b.txt c.txt => 1a.txt 2b.txt 3c.txt`,
+Example: a.txt b.txt c.txt => 1a.txt 2b.txt 3c.txt`,
 	Example: "rename-toolbox number C:/folder",
 	DisableFlagsInUseLine: true,
 	Args: cobra.ExactArgs(1),

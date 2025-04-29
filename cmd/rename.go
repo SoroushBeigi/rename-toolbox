@@ -16,7 +16,10 @@ var renameCmd = &cobra.Command{
 	Use:   "rename",
 	Short: "Rename files in the specified directory based on a pattern",
 	Long: `This command renames files in the specified directory. 
-    You can add a prefix, suffix, or replace a specific pattern in the filenames.`,
+You can add a prefix, suffix, or replace a specific pattern in the filenames.`,
+	Example: `rename-toolbox rename C:\folder a -t prefix ----> adds "a" prefix to all files in the folder
+rename-toolbox rename C:\folder b -t suffix ----> adds "b" suffix to all files in the folder
+rename-toolbox rename C:\folder txt -t format ----> changes all files format to .txt`,
 	Args: cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir := args[0]
@@ -51,9 +54,8 @@ func isValidType(renameType string) bool {
 }
 
 func init() {
-	rootCmd.AddCommand(renameCmd)
 	renameCmd.Flags().StringP("type", "t", "", "Type of renaming (prefix, suffix, format)")
-
+	rootCmd.AddCommand(renameCmd)
 }
 
 func renameFiles(dir, pattern, renameType string) {
