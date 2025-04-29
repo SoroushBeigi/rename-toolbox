@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -64,5 +65,7 @@ func addPrefix(oldName string, prefix string) string {
 }
 
 func addSuffix(oldName string, suffix string) string {
-	return oldName + suffix
+	splitStr:=strings.Split(oldName,".");
+	fileName,format:= splitStr[0],splitStr[1]
+	return fileName + suffix + format
 }
