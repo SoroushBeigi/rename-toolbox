@@ -29,7 +29,7 @@ var renameCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(renameCmd)
-	renameCmd.Flags().StringP("type", "t", "prefix", "Type of renaming (prefix, suffix, replace)")
+	renameCmd.Flags().StringP("type", "t", "prefix", "Type of renaming (prefix, suffix, format)")
 
 }
 
@@ -51,21 +51,28 @@ func renameFiles(dir, pattern, renameType string) {
 	}
 }
 
-func applyPattern(oldName string, value string, renameType string) string{
+func applyPattern(oldName string, value string, renameType string) string {
 	switch renameType {
 	case "prefix":
 		return addPrefix(oldName, value)
 	case "suffix":
 		return addSuffix(oldName, value)
+	case "format":
+		return changeFormat(oldName, value)
 	}
-	return addPrefix(oldName,value)
+	return addPrefix(oldName, value)
 }
 func addPrefix(oldName string, prefix string) string {
 	return prefix + oldName
 }
 
 func addSuffix(oldName string, suffix string) string {
-	splitStr:=strings.Split(oldName,".");
-	fileName,format:= splitStr[0],splitStr[1]
+	splitStr := strings.Split(oldName, ".")
+	fileName, format := splitStr[0], splitStr[1]
 	return fileName + suffix + format
+}
+
+func changeFormat(oldName string, newFormat string) string {
+	fileName := strings.Split(oldName, ".")[0]
+	return fileName + "." + newFormat
 }
